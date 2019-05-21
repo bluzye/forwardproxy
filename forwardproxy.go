@@ -65,6 +65,8 @@ type ForwardProxy struct {
 
 	aclRules         []aclRule
 	whitelistedPorts []int
+	
+	servername       string
 }
 
 var bufferPool sync.Pool
@@ -294,6 +296,15 @@ func (fp *ForwardProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) (int, 
 	if fp.authRequired {
 		authErr = fp.checkCredentials(r)
 	}
+	
+	if r.TLS == nil {
+		return fp.Next.ServeHTTP(w, r)
+	}
+
+	if fp.servername != "" && r.TLS.ServerName != fp.servername{
+		return fp.Next.ServeHTTP(w, r)
+	}
+	
 	if fp.probeResistEnabled && len(fp.probeResistDomain) > 0 && stripPort(r.Host) == fp.probeResistDomain {
 		return serveHiddenPage(w, authErr)
 	}
