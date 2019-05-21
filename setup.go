@@ -118,6 +118,13 @@ func setup(c *caddy.Controller) error {
 				}
 				fp.probeResistDomain = args[0]
 			}
+		case "server_name":
+			if len(args) > 1 {
+				return c.ArgErr()
+			}
+			if len(args) == 1 {
+				fp.servername = args[0]
+			}
 		case "serve_pac":
 			if len(args) > 1 {
 				return c.ArgErr()
