@@ -34,7 +34,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/caddyserver/forwardproxy/httpclient"
+	"github.com/bluzye/forwardproxy/httpclient"
 	"github.com/mholt/caddy/caddyhttp/httpserver"
 )
 
