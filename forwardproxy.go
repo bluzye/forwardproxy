@@ -65,8 +65,6 @@ type ForwardProxy struct {
 
 	aclRules         []aclRule
 	whitelistedPorts []int
-	
-	servername       string
 }
 
 var bufferPool sync.Pool
@@ -297,17 +295,10 @@ func (fp *ForwardProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) (int, 
 		authErr = fp.checkCredentials(r)
 	}
 	
-	if r.TLS == nil {
-		return fp.Next.ServeHTTP(w, r)
-	}
-
-	if fp.servername != "" && r.TLS.ServerName != fp.servername{
-		return fp.Next.ServeHTTP(w, r)
-	}
-	
 	if fp.probeResistEnabled && len(fp.probeResistDomain) > 0 && stripPort(r.Host) == fp.probeResistDomain {
 		return serveHiddenPage(w, authErr)
 	}
+	/*
 	if stripPort(r.Host) == fp.hostname && (r.Method != http.MethodConnect || authErr != nil) {
 		// Always pass non-CONNECT requests to hostname
 		// Pass CONNECT requests only if probe resistance is enabled and not authenticated
@@ -316,6 +307,7 @@ func (fp *ForwardProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) (int, 
 		}
 		return fp.Next.ServeHTTP(w, r)
 	}
+	*/
 	if authErr != nil {
 		if fp.probeResistEnabled {
 			// probe resistance is requested and requested URI does not match secret domain
