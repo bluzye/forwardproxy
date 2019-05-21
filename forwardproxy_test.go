@@ -28,7 +28,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/caddyserver/forwardproxy/httpclient"
+	"github.com/bluzye/forwardproxy/httpclient"
 	_ "github.com/mholt/caddy/caddyhttp/header"
 	_ "github.com/mholt/caddy/caddyhttp/httpserver"
 	_ "github.com/mholt/caddy/caddyhttp/redirect"
